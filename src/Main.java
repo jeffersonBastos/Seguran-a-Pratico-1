@@ -11,6 +11,7 @@ Client client = new Client();
 		int option = s.nextInt();
 		switch (option){
 		case 1:
+			client.saveUser();
 			System.out.println("teste");
 		case 2:
 			client.login();

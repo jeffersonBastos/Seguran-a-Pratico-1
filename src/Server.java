@@ -59,10 +59,9 @@ public class Server {
 		System.out.println(Hex.encodeHexString(derivedKeyFromScrypt));
 
 	}
-	public void login(UserAuth userAuth)  {
+	public void login(UserLogin userLogin)  {
+		String saltString = "53efb4b1157fccdb9902676329debc52";
 
-		// Instanciar um novo Security provider
-		// Nesse exemplo eh usado o BC padrao
 		int addProvider;
 		addProvider = Security.addProvider(new BouncyCastleFipsProvider());
 		if (Security.getProvider("BCFIPS") == null) {
@@ -71,11 +70,25 @@ public class Server {
 			System.out.println("Bouncy Castle provider esta disponivel");
 		}
 
+		PBKDF2UtilBCFIPS pbkdf2UtilBCFIPS = new PBKDF2UtilBCFIPS();
+//		try{
+//			 // salt = pbkdf2UtilBCFIPS.getSalt().getBytes();
+//		}catch (NoSuchAlgorithmException e) {
+//			System.out.println("Erro na geração do salt");
+//
+//		}
+		String token = pbkdf2UtilBCFIPS.generateDerivedKey(userLogin.getPassword(), saltString, 100);
+
+
+
+
+
+
+		// buscar do arquivo de código
 		byte[] salt = null;
-		String valorSalt = "53efb4b1157fccdb9902676329debc52";
 
 		try {
-			salt = Hex.decodeHex(valorSalt.toCharArray());
+			salt = Hex.decodeHex(saltString.toCharArray());
 		} catch (DecoderException ex) {
 		}
 
@@ -94,8 +107,9 @@ public class Server {
 		int parallelizationParam = 1; // exemplo: 1
 
 
+		String senhaSalva = "";
 		byte[] derivedKeyFromScrypt;
-		derivedKeyFromScrypt = SCRYPT.useScryptKDF(userAuth.getToken().toCharArray(), salt,
+		derivedKeyFromScrypt = SCRYPT.useScryptKDF(token.toCharArray(), salt,
 				costParameter,
 				blocksize, parallelizationParam);
 
@@ -103,5 +117,7 @@ public class Server {
 		System.out.println("Chave derivada usando scrypt: ");
 		System.out.println(Hex.encodeHexString(derivedKeyFromScrypt));
 
+		System.out.println("Chave banco: ");
+		System.out.println(Hex.encodeHexString(derivedKeyFromScrypt));
 	}
 }

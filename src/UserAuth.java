@@ -5,7 +5,7 @@ public class UserAuth {
 	private String token;
 	private LocalDate date;
 
-	public UserAuth(String name, String token, LocalDate date) {
+	public UserAuth(String name, String token, LocalDate date, String salt) {
 		this.name = name;
 		this.token = token;
 		this.date = date;
