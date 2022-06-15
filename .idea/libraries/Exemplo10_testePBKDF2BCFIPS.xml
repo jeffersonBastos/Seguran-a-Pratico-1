@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Exemplo10-testePBKDF2BCFIPS">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/Exemplo10-testePBKDF2BCFIPS.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
