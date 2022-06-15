@@ -1,20 +1,31 @@
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.logging.Logger;
+import org.apache.commons.codec.binary.Hex;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.bouncycastle.jcajce.provider.BouncyCastleFipsProvider;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.KeyStore;
+
 public class Server {
 	ScryptExample obj = new ScryptExample();
+
+	final static String storeFile = "store.bcfks";
+//boucen castle
+	static byte[] derivedKeyFromScrypt;
 
 	public Server(){
 
 	}
-	public void saveUser(UserAuth userAuth)  {
+	public void saveUser(UserAuth userAuth, String masterPasswordToken) throws KeyStoreException, NoSuchProviderException, CertificateException, IOException, NoSuchAlgorithmException, DecoderException {
 
 		// Instanciar um novo Security provider
 		// Nesse exemplo eh usado o BC padrao
@@ -32,6 +43,7 @@ public class Server {
 		 try {
 		 salt = Hex.decodeHex(valorSalt.toCharArray());
 		 } catch (DecoderException ex) {
+
 		 }
 
 
@@ -49,11 +61,26 @@ public class Server {
 		int parallelizationParam = 1; // exemplo: 1
 
 
-		byte[] derivedKeyFromScrypt;
 		derivedKeyFromScrypt = SCRYPT.useScryptKDF(userAuth.getToken().toCharArray(), salt,
 				costParameter,
 				blocksize, parallelizationParam);
 
+
+
+		KeyStore ks = null;
+
+		ks = KeyStore.getInstance("BCFKS", "BCFIPS");
+		// Cria do zero o keystore
+		ks.load(null, null);
+		// Armazena a senha mestre do keystore
+		ks.store(new FileOutputStream(storeFile), masterPasswordToken.toCharArray());
+
+		Key keyUser = new SecretKeySpec(Hex.decodeHex(userAuth.getToken().toCharArray()), "AES");
+		System.out.println("SecretKeySpec: "+keyUser);
+
+		ks.load(new FileInputStream(storeFile), masterPasswordToken.toCharArray());
+		ks.setKeyEntry(userAuth.getName(), keyUser, null,  null);
+		ks.store(new FileOutputStream(storeFile), masterPasswordToken.toCharArray());
 
 		System.out.println("Chave derivada usando scrypt: ");
 		System.out.println(Hex.encodeHexString(derivedKeyFromScrypt));

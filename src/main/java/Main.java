@@ -1,7 +1,14 @@
+import org.apache.commons.codec.DecoderException;
+
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 import java.util.Scanner;
 
 public class Main {
-	public static void main(String[] a) {
+	public static void main(String[] a) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, NoSuchProviderException, DecoderException {
 		Scanner s = new Scanner(System.in);
 Client client = new Client();
 
