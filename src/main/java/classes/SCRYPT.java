@@ -1,4 +1,4 @@
-
+package classes;
 
 import org.bouncycastle.crypto.fips.Scrypt;
 import org.bouncycastle.util.Strings;

@@ -117,5 +117,9 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.guicedee.services:commons-codec:1.0.6.3" level="project" />
+    <orderEntry type="library" name="de.taimos:totp:1.0" level="project" />
+    <orderEntry type="library" name="com.google.zxing:javase:3.2.1" level="project" />
+    <orderEntry type="library" name="com.google.zxing:javase:3.2.11" level="project" />
   </component>
 </module>
